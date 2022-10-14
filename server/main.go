@@ -7,9 +7,25 @@ import (
 )
 
 func main() {
-	fmt.Println(methods.Caesar("test", 3, true))
-	fmt.Println(methods.Caesar("qbpq", 3, false))
+	fmt.Println("CAESAR CIPHER")
+	secretMessage := "This is super secret message!"
+	encryptedMessage := methods.CaesarEncrypt(secretMessage, 3)
+	fmt.Println(encryptedMessage)
+	fmt.Println(methods.CaesarDecrypt(encryptedMessage, 3))
+	fmt.Println()
 
-	fmt.Println(methods.AES("This is a secret", "thisis32bitlongpassphraseimusing", true))
-	fmt.Println(methods.AES("145149d64a1a3c4025e67665001a3167", "thisis32bitlongpassphraseimusing", false))
+	fmt.Println("AES")
+	secretMessage = "This is a secret"
+	encryptedMessage = methods.AESEncrypt(secretMessage, "thisis32bitlongpassphraseimusing")
+	fmt.Println(encryptedMessage)
+	fmt.Println(methods.AESDecrypt(encryptedMessage, "thisis32bitlongpassphraseimusing"))
+	fmt.Println()
+
+	fmt.Println("RSA")
+	privateKey := methods.GenerateRSAPrivateKey()
+	publicKey := methods.GenerateRSAPublicKey(&privateKey)
+	secretMessage = "This is super secret message!"
+	encryptedMessage = methods.RSAEncrypt(secretMessage, publicKey)
+	fmt.Println(encryptedMessage)
+	fmt.Println(methods.RSADecrypt(encryptedMessage, privateKey))
 }
