@@ -48,5 +48,5 @@ func caesar(input string, key int, encrypt bool) string {
 
 func main() {
 	fmt.Println(caesar("test", 3, true))
-	fmt.Println(caesar("qbpq", -3, true))
+	fmt.Println(caesar("qbpq", 3, false))
 }
