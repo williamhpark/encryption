@@ -11,4 +11,5 @@
 ## Stack
 
 Frontend: React + TypeScript
+
 Backend: Golang
