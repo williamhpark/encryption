@@ -1,3 +1,3 @@
-module encryption-api
+module encryption-server
 
 go 1.19

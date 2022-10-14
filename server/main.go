@@ -1,52 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-// Caesar Cipher encryption/decryption
-// Params:
-// `input` - string to encrypt/decrypt
-// `key` - number of letters to shift by
-// `direction` - true to encrypt, false to decrypt
-func caesar(input string, key int, encrypt bool) string {
-	// Cast the string to an array of runes
-	runes := []rune(input)
-
-	// Cast the key to a rune
-	shift := rune(key)
-	// Size of the character set (26 in this case)
-	offset := rune(26)
-
-	switch encrypt {
-	// Decoding
-	case false:
-		for index, char := range runes {
-			if char >= 'a' && char <= 'z'-shift ||
-				char >= 'A' && char <= 'Z'-shift {
-				char = char + shift
-			} else if char > 'z'-shift && char <= 'z' ||
-				char > 'Z'-shift && char <= 'Z' {
-				char = char + shift - offset
-			}
-			runes[index] = char
-		}
-	// Encoding
-	default:
-		for index, char := range runes {
-			if char >= 'a'+shift && char <= 'z' ||
-				char >= 'A'+shift && char <= 'Z' {
-				char = char - shift
-			} else if char >= 'a' && char < 'a'+shift ||
-				char >= 'A' && char < 'A'+shift {
-				char = char - shift + offset
-			}
-			runes[index] = char
-		}
-	}
-
-	return string(runes)
-}
+	"encryption-server/methods"
+)
 
 func main() {
-	fmt.Println(caesar("test", 3, true))
-	fmt.Println(caesar("qbpq", 3, false))
+	fmt.Println(methods.Caesar("test", 3, true))
+	fmt.Println(methods.Caesar("qbpq", 3, false))
 }
