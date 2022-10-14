@@ -17,6 +17,16 @@ type Metadata struct {
 
 // Handler for encrypting a message using a Caesar Cipher
 func caesarEncryptHandler(w http.ResponseWriter, r *http.Request) {
+	// Error checking
+	if r.URL.Path != "/caesar/encrypt" {
+		http.Error(w, "404 not found", http.StatusNotFound)
+		return
+	}
+	if r.Method != "POST" {
+		http.Error(w, "method is not supported", http.StatusNotFound)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
 	var metadata Metadata
@@ -38,6 +48,16 @@ func caesarEncryptHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handler for decrypting a message using a Caesar Cipher
 func caesarDecryptHandler(w http.ResponseWriter, r *http.Request) {
+	// Error checking
+	if r.URL.Path != "/caesar/decrypt" {
+		http.Error(w, "404 not found", http.StatusNotFound)
+		return
+	}
+	if r.Method != "POST" {
+		http.Error(w, "method is not supported", http.StatusNotFound)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
 	var metadata Metadata
