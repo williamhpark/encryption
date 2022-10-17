@@ -123,13 +123,6 @@ func GenerateRSAPrivateKey() rsa.PrivateKey {
 	return *privateKey
 }
 
-// Generate the RSA public key from the private key
-// Params:
-// `privateKey` - the private key to extract the public key from
-func GenerateRSAPublicKey(privateKey *rsa.PrivateKey) rsa.PublicKey {
-	return privateKey.PublicKey
-}
-
 // Rivest-Shamir-Adleman (RSA) encryption
 // Params:
 // `message` - string to encrypt

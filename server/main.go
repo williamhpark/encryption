@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/rsa"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -14,6 +15,8 @@ type Metadata struct {
 	Message string `json:"message"`
 	Key     string `json:"key"`
 }
+
+var privateKey rsa.PrivateKey
 
 // Handler for encrypting a message using a Caesar Cipher
 func caesarEncryptHandler(w http.ResponseWriter, r *http.Request) {
@@ -127,28 +130,80 @@ func aesDecryptHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(decryptedMessage)
 }
 
+// Handler for encrypting a message using RSA
+func rsaEncryptHandler(w http.ResponseWriter, r *http.Request) {
+	// Error checking
+	if r.URL.Path != "/rsa/encrypt" {
+		http.Error(w, "404 not found", http.StatusNotFound)
+		return
+	}
+	if r.Method != "POST" {
+		http.Error(w, "method is not supported", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	var metadata Metadata
+	// Decode the received body, store the metadata in `metadata`
+	_ = json.NewDecoder(r.Body).Decode(&metadata)
+
+	// Generate a private key
+	privateKey = methods.GenerateRSAPrivateKey()
+
+	// Encrypt the message
+	encryptedMessage := methods.RSAEncrypt(metadata.Message, privateKey.PublicKey)
+
+	// Return the encrypted message to the client
+	json.NewEncoder(w).Encode(encryptedMessage)
+}
+
+// Handler for decrypting a message using RSA
+func rsaDecryptHandler(w http.ResponseWriter, r *http.Request) {
+	// Error checking
+	if r.URL.Path != "/rsa/decrypt" {
+		http.Error(w, "404 not found", http.StatusNotFound)
+		return
+	}
+	if r.Method != "POST" {
+		http.Error(w, "method is not supported", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	var metadata Metadata
+	// Decode the received body, store the metadata in `metadata`
+	_ = json.NewDecoder(r.Body).Decode(&metadata)
+
+	// Decrypt the message
+	decryptedMessage := methods.RSADecrypt(metadata.Message, privateKey)
+
+	// Return the decrypted message to the client
+	json.NewEncoder(w).Encode(decryptedMessage)
+}
+
 func main() {
-	fmt.Println("CAESAR CIPHER")
-	secretMessage := "This is super secret message!"
-	encryptedMessage := methods.CaesarEncrypt(secretMessage, 3)
-	fmt.Println(encryptedMessage)
-	fmt.Println(methods.CaesarDecrypt(encryptedMessage, 3))
-	fmt.Println()
+	// fmt.Println("CAESAR CIPHER")
+	// secretMessage := "This is super secret message!"
+	// encryptedMessage := methods.CaesarEncrypt(secretMessage, 3)
+	// fmt.Println(encryptedMessage)
+	// fmt.Println(methods.CaesarDecrypt(encryptedMessage, 3))
+	// fmt.Println()
 
-	fmt.Println("AES")
-	secretMessage = "This is a secret"
-	encryptedMessage = methods.AESEncrypt(secretMessage, "thisis32bitlongpassphraseimusing")
-	fmt.Println(encryptedMessage)
-	fmt.Println(methods.AESDecrypt(encryptedMessage, "thisis32bitlongpassphraseimusing"))
-	fmt.Println()
+	// fmt.Println("AES")
+	// secretMessage = "This is a secret"
+	// encryptedMessage = methods.AESEncrypt(secretMessage, "thisis32bitlongpassphraseimusing")
+	// fmt.Println(encryptedMessage)
+	// fmt.Println(methods.AESDecrypt(encryptedMessage, "thisis32bitlongpassphraseimusing"))
+	// fmt.Println()
 
-	fmt.Println("RSA")
-	privateKey := methods.GenerateRSAPrivateKey()
-	publicKey := methods.GenerateRSAPublicKey(&privateKey)
-	secretMessage = "This is super secret message!"
-	encryptedMessage = methods.RSAEncrypt(secretMessage, publicKey)
-	fmt.Println(encryptedMessage)
-	fmt.Println(methods.RSADecrypt(encryptedMessage, privateKey))
+	// fmt.Println("RSA")
+	// privateKey := methods.GenerateRSAPrivateKey()
+	// secretMessage = "This is super secret message!"
+	// encryptedMessage = methods.RSAEncrypt(secretMessage, privateKey.PublicKey)
+	// fmt.Println(encryptedMessage)
+	// fmt.Println(methods.RSADecrypt(encryptedMessage, privateKey))
 
 	// Handler functions for request paths
 
@@ -159,6 +214,10 @@ func main() {
 	// AES
 	http.HandleFunc("/aes/encrypt", aesEncryptHandler)
 	http.HandleFunc("/aes/decrypt", aesDecryptHandler)
+
+	// RSA
+	http.HandleFunc("/rsa/encrypt", rsaEncryptHandler)
+	http.HandleFunc("/rsa/decrypt", rsaDecryptHandler)
 
 	fmt.Printf("Starting server at port 8080\n")
 	// Tell the global HTTP server to listen for requests on port 8080
