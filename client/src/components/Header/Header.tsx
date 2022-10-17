@@ -7,13 +7,13 @@ type HeaderProps = {
   method: Method;
 };
 
-const descriptions: { [key: string]: string } = {
-  [Method.Caesar]: "Caesar",
-  [Method.AES]: "AES",
-  [Method.RSA]: "RSA",
-};
-
 const Header: React.FunctionComponent<HeaderProps> = ({ method }) => {
+  const descriptions: { [key: string]: string } = {
+    [Method.Caesar]: "Caesar",
+    [Method.AES]: "AES",
+    [Method.RSA]: "RSA",
+  };
+
   return (
     <div className="header">
       <h1>{method}</h1>

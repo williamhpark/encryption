@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 
 import Dropdown from "./components/Dropdown/Dropdown";
+import Form from "./components/Form/Form";
 import Header from "./components/Header/Header";
 
 export enum Method {
@@ -19,13 +20,7 @@ const App = () => {
     <div className="App">
       <Header method={method} />
       <Dropdown methods={methods} method={method} setMethod={setMethod} />
-      {method === Method.Caesar ? (
-        <p>{Method.Caesar}</p>
-      ) : method === Method.AES ? (
-        <p>{Method.AES}</p>
-      ) : method === Method.RSA ? (
-        <p>{Method.RSA}</p>
-      ) : null}
+      <Form method={method} />
     </div>
   );
 };

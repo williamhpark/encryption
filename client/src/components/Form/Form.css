@@ -1,0 +1,32 @@
+.form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form input {
+    width: 250px;
+}
+
+.container {
+    margin: 20px;
+    display: flex;
+}
+
+.section {
+    margin-right: 50px;
+}
+
+.input-container {
+    margin: 10px;
+}
+
+.result {
+    text-align: left;
+    width: 200px;
+}
+
+.submit-btn {
+    margin: 20px;
+}

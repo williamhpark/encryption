@@ -35,7 +35,9 @@ const Dropdown: React.FunctionComponent<DropdownProps> = ({
           onChange={handleChange}
         >
           {methods.map((method) => (
-            <MenuItem value={method}>{method}</MenuItem>
+            <MenuItem key={method} value={method}>
+              {method}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
