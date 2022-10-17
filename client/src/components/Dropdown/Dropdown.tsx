@@ -26,12 +26,12 @@ const Dropdown: React.FunctionComponent<DropdownProps> = ({
   return (
     <Box className="select">
       <FormControl fullWidth>
-        <InputLabel id="method-select-label">Method</InputLabel>
+        <InputLabel id="method-select-label">Encrpytion Method</InputLabel>
         <Select
           labelId="method-select-label"
           id="method-select"
           value={method}
-          label="Method"
+          label="Encryption Method"
           onChange={handleChange}
         >
           {methods.map((method) => (
