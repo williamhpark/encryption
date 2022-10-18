@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -20,6 +20,16 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
   const [decryptInput, setDecryptInput] = useState("");
   const [decryptKey, setDecryptKey] = useState("");
   const [decryptMessage, setDecryptMessage] = useState("");
+
+  // If the method changes, reset all inputs and results
+  useEffect(() => {
+    setEncryptInput("");
+    setEncryptKey("");
+    setEncryptMessage("");
+    setDecryptInput("");
+    setDecryptKey("");
+    setDecryptMessage("");
+  }, [method]);
 
   const fetchEncryptMessage = async () => {
     setError("");
