@@ -1,5 +1,9 @@
 # Encryption
 
+This was a basic web application I created to demonstrate three well-known encryption methods, one outdated and two used extensively in our society today.
+
+Through creating this project, I was able to learn more about the inner workings of the three encryption protocols, see how to implement the protocols in Golang, as well as refresh my memory on React TypeScript and Golang.
+
 ## Encryption Methods
 
 1. Caesar Cipher
@@ -11,3 +15,5 @@
 Frontend: React + TypeScript
 
 Backend: Golang
+
+Deploy: Heroku
