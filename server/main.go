@@ -8,6 +8,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
+	"github.com/rs/cors"
+
 	"encryption-server/methods"
 )
 
@@ -30,8 +33,6 @@ func caesarEncryptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	var metadata Metadata
 	// Decode the received body, store the metadata in `metadata`
 	_ = json.NewDecoder(r.Body).Decode(&metadata)
@@ -39,11 +40,14 @@ func caesarEncryptHandler(w http.ResponseWriter, r *http.Request) {
 	// Convert the Caesar Cipher key to an int
 	key, err := strconv.Atoi(metadata.Key)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	// Encrypt the message
-	encryptedMessage := methods.CaesarEncrypt(metadata.Message, key)
+	encryptedMessage, err := methods.CaesarEncrypt(metadata.Message, key)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	// Return the encrypted message to the client
 	json.NewEncoder(w).Encode(encryptedMessage)
@@ -61,8 +65,6 @@ func caesarDecryptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	var metadata Metadata
 	// Decode the received body, store the metadata in `metadata`
 	_ = json.NewDecoder(r.Body).Decode(&metadata)
@@ -70,11 +72,14 @@ func caesarDecryptHandler(w http.ResponseWriter, r *http.Request) {
 	// Convert the Caesar Cipher key to an int
 	key, err := strconv.Atoi(metadata.Key)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	// Decrypt the message
-	decryptedMessage := methods.CaesarDecrypt(metadata.Message, key)
+	decryptedMessage, err := methods.CaesarDecrypt(metadata.Message, key)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	// Return the decrypted message to the client
 	json.NewEncoder(w).Encode(decryptedMessage)
@@ -92,14 +97,15 @@ func aesEncryptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	var metadata Metadata
 	// Decode the received body, store the metadata in `metadata`
 	_ = json.NewDecoder(r.Body).Decode(&metadata)
 
 	// Encrypt the message
-	encryptedMessage := methods.AESEncrypt(metadata.Message, metadata.Key)
+	encryptedMessage, err := methods.AESEncrypt(metadata.Message, metadata.Key)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	// Return the encrypted message to the client
 	json.NewEncoder(w).Encode(encryptedMessage)
@@ -117,14 +123,15 @@ func aesDecryptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	var metadata Metadata
 	// Decode the received body, store the metadata in `metadata`
 	_ = json.NewDecoder(r.Body).Decode(&metadata)
 
 	// Decrypt the message
-	decryptedMessage := methods.AESDecrypt(metadata.Message, metadata.Key)
+	decryptedMessage, err := methods.AESDecrypt(metadata.Message, metadata.Key)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	// Return the decrypted message to the client
 	json.NewEncoder(w).Encode(decryptedMessage)
@@ -142,8 +149,6 @@ func rsaEncryptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	var metadata Metadata
 	// Decode the received body, store the metadata in `metadata`
 	_ = json.NewDecoder(r.Body).Decode(&metadata)
@@ -152,7 +157,10 @@ func rsaEncryptHandler(w http.ResponseWriter, r *http.Request) {
 	privateKey = methods.GenerateRSAPrivateKey()
 
 	// Encrypt the message
-	encryptedMessage := methods.RSAEncrypt(metadata.Message, privateKey.PublicKey)
+	encryptedMessage, err := methods.RSAEncrypt(metadata.Message, privateKey.PublicKey)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	// Return the encrypted message to the client
 	json.NewEncoder(w).Encode(encryptedMessage)
@@ -170,60 +178,54 @@ func rsaDecryptHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	var metadata Metadata
 	// Decode the received body, store the metadata in `metadata`
 	_ = json.NewDecoder(r.Body).Decode(&metadata)
 
 	// Decrypt the message
-	decryptedMessage := methods.RSADecrypt(metadata.Message, privateKey)
+	decryptedMessage, err := methods.RSADecrypt(metadata.Message, privateKey)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	// Return the decrypted message to the client
 	json.NewEncoder(w).Encode(decryptedMessage)
 }
 
 func main() {
-	// fmt.Println("CAESAR CIPHER")
-	// secretMessage := "This is super secret message!"
-	// encryptedMessage := methods.CaesarEncrypt(secretMessage, 3)
-	// fmt.Println(encryptedMessage)
-	// fmt.Println(methods.CaesarDecrypt(encryptedMessage, 3))
-	// fmt.Println()
-
-	// fmt.Println("AES")
-	// secretMessage = "This is a secret"
-	// encryptedMessage = methods.AESEncrypt(secretMessage, "thisis32bitlongpassphraseimusing")
-	// fmt.Println(encryptedMessage)
-	// fmt.Println(methods.AESDecrypt(encryptedMessage, "thisis32bitlongpassphraseimusing"))
-	// fmt.Println()
-
-	// fmt.Println("RSA")
-	// privateKey := methods.GenerateRSAPrivateKey()
-	// secretMessage = "This is super secret message!"
-	// encryptedMessage = methods.RSAEncrypt(secretMessage, privateKey.PublicKey)
-	// fmt.Println(encryptedMessage)
-	// fmt.Println(methods.RSADecrypt(encryptedMessage, privateKey))
+	router := mux.NewRouter()
 
 	// Handler functions for request paths
 
 	// Caesar Cipher
-	http.HandleFunc("/caesar/encrypt", caesarEncryptHandler)
-	http.HandleFunc("/caesar/decrypt", caesarDecryptHandler)
+	router.HandleFunc("/caesar/encrypt", caesarEncryptHandler).Methods("POST")
+	router.HandleFunc("/caesar/decrypt", caesarDecryptHandler).Methods("POST")
 
 	// AES
-	http.HandleFunc("/aes/encrypt", aesEncryptHandler)
-	http.HandleFunc("/aes/decrypt", aesDecryptHandler)
+	router.HandleFunc("/aes/encrypt", aesEncryptHandler).Methods("POST")
+	router.HandleFunc("/aes/decrypt", aesDecryptHandler).Methods("POST")
 
 	// RSA
-	http.HandleFunc("/rsa/encrypt", rsaEncryptHandler)
-	http.HandleFunc("/rsa/decrypt", rsaDecryptHandler)
+	router.HandleFunc("/rsa/encrypt", rsaEncryptHandler).Methods("POST")
+	router.HandleFunc("/rsa/decrypt", rsaDecryptHandler).Methods("POST")
 
 	fmt.Printf("Starting server at port 8080\n")
-	// Tell the global HTTP server to listen for requests on port 8080
-	// Pass `nil` for the `http.Handler` parameter, i.e. use the default server multiplexer
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// log.Fatal(http.ListenAndServe(":8080", handlers.CORS()(router)))
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead,
+		},
+		AllowedHeaders: []string{"*"},
+	})
+
+	handler := c.Handler(router)
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }

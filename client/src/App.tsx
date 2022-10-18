@@ -15,12 +15,14 @@ const methods = Object.values(Method);
 
 const App = () => {
   const [method, setMethod] = useState(Method.Caesar);
+  const [error, setError] = useState("");
 
   return (
     <div className="App">
       <Header method={method} />
       <Dropdown methods={methods} method={method} setMethod={setMethod} />
-      <Form method={method} />
+      <Form method={method} setError={setError} />
+      {error ? <h3 className="error-msg">{error}</h3> : null}
     </div>
   );
 };

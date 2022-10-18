@@ -6,3 +6,8 @@
   align-items: center;
   text-align: center;
 }
+
+.error-msg {
+  color: red;
+  margin-bottom: 50px;
+}

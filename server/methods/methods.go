@@ -13,7 +13,7 @@ import (
 // Params:
 // `message` - string to encrypt
 // `key` - number of letters to shift by
-func CaesarEncrypt(message string, key int) string {
+func CaesarEncrypt(message string, key int) (string, error) {
 	// Cast the string to an array of runes
 	runes := []rune(message)
 	// Cast the key to a rune
@@ -33,14 +33,14 @@ func CaesarEncrypt(message string, key int) string {
 		runes[index] = char
 	}
 
-	return string(runes)
+	return string(runes), nil
 }
 
 // Caesar Cipher decryption
 // Params:
 // `message` - string to decrypt
 // `key` - number of letters to shift by
-func CaesarDecrypt(message string, key int) string {
+func CaesarDecrypt(message string, key int) (string, error) {
 	// Cast the string to an array of runes
 	runes := []rune(message)
 	// Cast the key to a rune
@@ -60,21 +60,21 @@ func CaesarDecrypt(message string, key int) string {
 		runes[index] = char
 	}
 
-	return string(runes)
+	return string(runes), nil
 }
 
 // Advanced Encryption Standard (AES) encryption
 // Params:
 // `message` - string to encrypt
 // `s_key` - cipher key
-func AESEncrypt(message string, s_key string) string {
+func AESEncrypt(message string, s_key string) (string, error) {
 	// Cast the cipher key to an array of bytes
 	key := []byte(s_key)
 
 	// Create cipher
 	c, err := aes.NewCipher(key)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	// Allocate space for ciphered data
@@ -84,14 +84,14 @@ func AESEncrypt(message string, s_key string) string {
 	c.Encrypt(out, []byte(message))
 
 	// Return the hexadecimal encoding for the string
-	return hex.EncodeToString(out)
+	return hex.EncodeToString(out), nil
 }
 
 // Advanced Encryption Standard (AES) decryption
 // Params:
 // `message` - string to decrypt
 // `sKey` - cipher key
-func AESDecrypt(message string, sKey string) string {
+func AESDecrypt(message string, sKey string) (string, error) {
 	// Cast the cipher key to an array of bytes
 	key := []byte(sKey)
 
@@ -101,7 +101,7 @@ func AESDecrypt(message string, sKey string) string {
 	// Create cipher
 	c, err := aes.NewCipher(key)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	// Allocate space for ciphered data
@@ -110,7 +110,7 @@ func AESDecrypt(message string, sKey string) string {
 	// Decrypt the string
 	c.Decrypt(pt, ciphertext)
 
-	return string(pt[:])
+	return string(pt[:]), nil
 }
 
 // Generate an RSA private key
@@ -127,7 +127,7 @@ func GenerateRSAPrivateKey() rsa.PrivateKey {
 // Params:
 // `message` - string to encrypt
 // `key` - public key
-func RSAEncrypt(message string, key rsa.PublicKey) string {
+func RSAEncrypt(message string, key rsa.PublicKey) (string, error) {
 	label := []byte("OAEP Encrypted")
 	// `crypto/rand.Reader`` is a good source of entropy for randomizing the encryption function
 	rng := rand.Reader
@@ -135,17 +135,17 @@ func RSAEncrypt(message string, key rsa.PublicKey) string {
 	// Encrypts the given message with RSA-OAEP
 	ciphertext, err := rsa.EncryptOAEP(sha256.New(), rng, &key, []byte(message), label)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
-	return base64.StdEncoding.EncodeToString(ciphertext)
+	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
 // Rivest-Shamir-Adleman (RSA) encryption
 // Params:
 // `message` - string to encrypt/decrypt
 // `key` - private key
-func RSADecrypt(message string, key rsa.PrivateKey) string {
+func RSADecrypt(message string, key rsa.PrivateKey) (string, error) {
 	ct, _ := base64.StdEncoding.DecodeString(message)
 	label := []byte("OAEP Encrypted")
 	rng := rand.Reader
@@ -153,8 +153,8 @@ func RSADecrypt(message string, key rsa.PrivateKey) string {
 	// Decrypt the ciphertext using RSA-OAEP
 	plaintext, err := rsa.DecryptOAEP(sha256.New(), rng, &key, ct, label)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
-	return string(plaintext)
+	return string(plaintext), nil
 }
