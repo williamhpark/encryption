@@ -70,7 +70,7 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
           setError('"Encrypt Message" must be 16 bits (characters) long');
           return;
         }
-        if (encryptKey.length != 32) {
+        if (encryptKey.length !== 32) {
           setError('"Encrypt Key" must be 32 bits (characters) long');
           return;
         }
@@ -138,7 +138,7 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
           setError('"Decrypt Key" is blank');
           return;
         }
-        if (decryptKey.length != 32) {
+        if (decryptKey.length !== 32) {
           setError('"Decrypt Key" must be 32 bits (characters) long');
           return;
         }
