@@ -215,7 +215,7 @@ func main() {
 	/*
 		Serve the contents of the build directory that was produced as a part of `yarn run build` on the root `/`
 	*/
-	http.Handle("/", http.FileServer(http.Dir("./build")))
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./build/")))
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
