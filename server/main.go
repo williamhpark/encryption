@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -195,7 +196,9 @@ func rsaDecryptHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := mux.NewRouter()
 
-	// Handler functions for request paths
+	/*
+		Handler functions for request paths
+	*/
 
 	// Caesar Cipher
 	router.HandleFunc("/caesar/encrypt", caesarEncryptHandler).Methods("POST")
@@ -209,8 +212,11 @@ func main() {
 	router.HandleFunc("/rsa/encrypt", rsaEncryptHandler).Methods("POST")
 	router.HandleFunc("/rsa/decrypt", rsaDecryptHandler).Methods("POST")
 
-	fmt.Printf("Starting server at port 8080\n")
-	// log.Fatal(http.ListenAndServe(":8080", handlers.CORS()(router)))
+	/*
+		Serve the contents of the build directory that was produced as a part of `yarn run build` on the root `/`
+	*/
+	http.Handle("/", http.FileServer(http.Dir("./build")))
+
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
@@ -225,7 +231,16 @@ func main() {
 		},
 		AllowedHeaders: []string{"*"},
 	})
-
 	handler := c.Handler(router)
-	log.Fatal(http.ListenAndServe(":8080", handler))
+
+	// Check if the port environment variable has been set and if so, use that, otherwise use a reasonable default
+	port := os.Getenv("PORT")
+	defaultPort := "8080"
+	if port != "" {
+		fmt.Printf("Starting server at port %v\n", port)
+		log.Fatal(http.ListenAndServe(":"+port, handler))
+	} else {
+		fmt.Printf("Starting server at port %v\n", defaultPort)
+		log.Fatal(http.ListenAndServe(":"+defaultPort, handler))
+	}
 }
