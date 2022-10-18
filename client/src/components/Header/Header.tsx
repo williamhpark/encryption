@@ -14,7 +14,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({ method }) => {
     [Method.AES]:
       "The Advanced Encryption Standard (AES) aka Rijndael is an encryption algorithm created in 2001 by NIST. It's a symmetric block cipher. It can use a 128/192/256-bit key to encrypt (256 bit for this application), takes 128 bits as input and outputs 128 bits of encrypted cipher text as output.",
     [Method.RSA]:
-      "Under RSA encryption, messages are encrypted with a code called a public key, which can be shared openly. Due to some distinct mathematical properties of the RSA algorithm, once a message has been encrypted with the public key, it can only be decrypted by another key, known as the private key. Each RSA user has a key pair consisting of their public and private keys. As the name suggests, the private key must be kept secret.",
+      "Under RSA encryption, messages are encrypted with a code called a public key, which can be shared openly. Due to some distinct mathematical properties of the RSA algorithm, once a message has been encrypted with the public key, it can only be decrypted by another key, known as the private key (which must be kept secret). Each RSA user has a key pair consisting of their public and private keys. In this application, the public and private keys are generated and stored in the server during runtime.",
   };
 
   return (
