@@ -38,6 +38,10 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
       setError('"Encrypt Message" is blank');
       return;
     }
+    if (encryptInput.length > 16) {
+      setError('"Encrypt Message" is too long');
+      return;
+    }
 
     let methodAbbrv = "";
     let data = {};
@@ -45,6 +49,10 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
       case Method.Caesar:
         if (!encryptKey) {
           setError('"Encrypt Key" is blank');
+          return;
+        }
+        if (Number(encryptKey) < 0) {
+          setError('"Encrypt Key" must be a non-negative number');
           return;
         }
         methodAbbrv = "caesar";
@@ -56,6 +64,14 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
       case Method.AES:
         if (!encryptKey) {
           setError('"Encrypt Key" is blank');
+          return;
+        }
+        if (encryptInput.length !== 16) {
+          setError('"Encrypt Message" must be 16 bits (characters) long');
+          return;
+        }
+        if (encryptKey.length != 32) {
+          setError('"Encrypt Key" must be 32 bits (characters) long');
           return;
         }
         methodAbbrv = "aes";
@@ -107,6 +123,10 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
           setError('"Decrypt Key" is blank');
           return;
         }
+        if (Number(decryptKey) < 0) {
+          setError('"Decrypt Key" must be a non-negative number');
+          return;
+        }
         methodAbbrv = "caesar";
         data = {
           message: decryptInput,
@@ -116,6 +136,10 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
       case Method.AES:
         if (!decryptKey) {
           setError('"Decrypt Key" is blank');
+          return;
+        }
+        if (decryptKey.length != 32) {
+          setError('"Decrypt Key" must be 32 bits (characters) long');
           return;
         }
         methodAbbrv = "aes";
@@ -161,6 +185,8 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
               label="Encrypt Message"
               variant="outlined"
               value={encryptInput}
+              type="text"
+              inputProps={{ maxLength: 16 }}
               onChange={(e) => setEncryptInput(e.target.value)}
             />
             {method === Method.Caesar || method === Method.AES ? (
@@ -169,6 +195,8 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
                 label="Encrypt Key"
                 variant="outlined"
                 value={encryptKey}
+                type={method === Method.Caesar ? "number" : "text"}
+                inputProps={method === Method.AES ? { maxLength: 32 } : {}}
                 onChange={(e) => setEncryptKey(e.target.value)}
               />
             ) : null}
@@ -194,6 +222,7 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
               label="Decrypt Message"
               variant="outlined"
               value={decryptInput}
+              type="text"
               onChange={(e) => setDecryptInput(e.target.value)}
             />
             {method === Method.Caesar || method === Method.AES ? (
@@ -202,6 +231,8 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
                 label="Decrypt Key"
                 variant="outlined"
                 value={decryptKey}
+                type={method === Method.Caesar ? "number" : "text"}
+                inputProps={method === Method.AES ? { maxLength: 32 } : {}}
                 onChange={(e) => setDecryptKey(e.target.value)}
               />
             ) : null}
