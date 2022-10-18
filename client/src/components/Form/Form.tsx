@@ -11,7 +11,10 @@ type FormProps = {
   setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ENDPOINT = "http://localhost:8080";
+const ENDPOINT =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:8080"
+    : process.env.REACT_APP_API_URL;
 
 const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
   const [encryptInput, setEncryptInput] = useState("");
