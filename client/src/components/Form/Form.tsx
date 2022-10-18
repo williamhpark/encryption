@@ -67,11 +67,11 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
           return;
         }
         if (encryptInput.length !== 16) {
-          setError('"Encrypt Message" must be 16 bits (characters) long');
+          setError('"Encrypt Message" must be 128 bits (16 characters) long');
           return;
         }
         if (encryptKey.length !== 32) {
-          setError('"Encrypt Key" must be 32 bits (characters) long');
+          setError('"Encrypt Key" must be 256 bits (32 characters) long');
           return;
         }
         methodAbbrv = "aes";
@@ -139,7 +139,7 @@ const Form: React.FunctionComponent<FormProps> = ({ method, setError }) => {
           return;
         }
         if (decryptKey.length !== 32) {
-          setError('"Decrypt Key" must be 32 bits (characters) long');
+          setError('"Decrypt Key" must be 256 bits (32 characters) long');
           return;
         }
         methodAbbrv = "aes";

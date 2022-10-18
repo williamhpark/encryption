@@ -8,7 +8,7 @@ import Header from "./components/Header/Header";
 export enum Method {
   Caesar = "Caesar Cipher",
   AES = "Advanced Encryption Standard (AES)",
-  RSA = "Advanced Encryption Standard (RSA)",
+  RSA = "Rivest-Shamir-Adleman (RSA)",
 }
 
 const methods = Object.values(Method);
