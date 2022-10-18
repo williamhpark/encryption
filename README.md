@@ -14,8 +14,8 @@ You can play around with the web app at: https://encryption-methods.herokuapp.co
 
 ## Stack
 
-Frontend: React + TypeScript
+**Frontend**: React + TypeScript
 
-Backend: Golang
+**Backend**: Golang (Go)
 
-Deploy: Heroku
+**Deploy**: Heroku
